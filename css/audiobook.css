@@ -1,0 +1,352 @@
+/* Book Header */
+.book-header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: var(--white);
+    padding: 3rem 2rem;
+    margin: -2rem -2rem 2rem -2rem;
+}
+
+.book-info {
+    display: flex;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.book-cover {
+    width: 250px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+}
+
+.book-details {
+    flex: 1;
+}
+
+.book-details h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.author {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin-bottom: 1rem;
+}
+
+.book-meta {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.book-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+/* Audio Player */
+.audio-player-section {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+}
+
+.audio-player {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.player-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.control-button {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--text);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.control-button:hover {
+    background: var(--background);
+}
+
+.play-button {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-gradient);
+    color: var(--white);
+    font-size: 1.5rem;
+}
+
+.play-button:hover {
+    transform: scale(1.05);
+    background: var(--primary-gradient);
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--background);
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+}
+
+.progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--primary);
+    border-radius: 2px;
+    width: 30%;
+}
+
+.time {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    min-width: 60px;
+}
+
+.player-settings {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2rem;
+}
+
+.speed-button {
+    background: none;
+    border: 1px solid var(--text-light);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.volume-slider {
+    width: 100px;
+}
+
+/* Translation Section */
+.translation-section {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+}
+
+.language-selector {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--text-light);
+    padding-bottom: 1rem;
+}
+
+.language-selector button {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    color: var(--text);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+}
+
+.language-selector button.active {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.add-language {
+    margin-left: auto;
+    color: var(--primary) !important;
+}
+
+.translation-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.original-text, .translations {
+    background: var(--background);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+}
+
+.translation-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.translation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.translation-meta {
+    text-align: right;
+}
+
+.translator {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.vote-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.vote-buttons button {
+    background: none;
+    border: 1px solid var(--text-light);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+}
+
+.vote-buttons button.active {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+}
+
+.add-translation-button {
+    width: 100%;
+    padding: 1rem;
+    background: none;
+    border: 2px dashed var(--text-light);
+    border-radius: var(--radius-md);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-translation-button:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Comments Section */
+.comments-section {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.add-comment {
+    margin-top: 2rem;
+}
+
+.add-comment textarea {
+    width: 100%;
+    height: 100px;
+    padding: 1rem;
+    border: 1px solid var(--text-light);
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+    resize: vertical;
+}
+
+.submit-comment {
+    background: var(--primary-gradient);
+    color: var(--white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.submit-comment:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .book-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .book-meta {
+        justify-content: center;
+    }
+
+    .translation-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .book-cover {
+        width: 200px;
+        height: 280px;
+    }
+
+    .player-controls {
+        gap: 0.5rem;
+    }
+
+    .language-selector {
+        flex-wrap: wrap;
+    }
+
+    .add-language {
+        width: 100%;
+        margin-top: 1rem;
+    }
+} 
