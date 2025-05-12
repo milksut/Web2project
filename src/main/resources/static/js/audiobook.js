@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeUserMenu();
 });
 
+ function syncTextarea() {
+        const textarea = document.querySelector('.comment-area');
+        const hiddenInput = document.querySelector('#contentHidden');
+        hiddenInput.value = textarea.value;
+    }
+
 function initializeAudioPlayer() {
     const audioPlayer = document.getElementById("audioPlayer");
     const playPauseButton = document.getElementById("playPause");
@@ -110,74 +116,6 @@ function initializeTranslations() {
     });
 }
 
-function initializeComments() {
-    const commentsContainer = document.querySelector('.comments-container');
-    const commentForm = document.querySelector('.add-comment');
-    const commentInput = commentForm.querySelector('textarea');
-    const submitButton = commentForm.querySelector('.submit-comment');
-
-    loadComments();
-
-    submitButton.addEventListener('click', () => {
-        const commentText = commentInput.value.trim();
-        if (commentText) {
-            addComment({
-                user: 'Selcuk Oz',
-                avatar: 'https://ui-avatars.com/api/?name=Selcuk+Oz&background=4A90E2&color=fff',
-                text: commentText,
-                timestamp: new Date()
-            });
-            commentInput.value = '';
-        }
-    });
-
-    function loadComments() {
-        const comments = [
-            {
-                user: 'Maria Garcia',
-                avatar: 'https://ui-avatars.com/api/?name=Maria+Garcia&background=FF6B6B&color=fff',
-                text: 'This translation really helped me understand the nuances of the story better.',
-                timestamp: new Date(Date.now() - 3600000)
-            },
-        ];
-
-        comments.forEach(addComment);
-    }
-
-    function addComment(comment) {
-        const commentElement = document.createElement('div');
-        commentElement.className = 'comment';
-        commentElement.innerHTML = `
-            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                <img src="${comment.avatar}" alt="${comment.user}" 
-                     style="width: 40px; height: 40px; border-radius: 50%;">
-                <div style="flex: 1;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                        <strong>${comment.user}</strong>
-                        <span style="color: var(--text-light); font-size: 0.875rem;">
-                            ${formatTimestamp(comment.timestamp)}
-                        </span>
-                    </div>
-                    <p style="color: var(--text); margin: 0;">${comment.text}</p>
-                </div>
-            </div>
-        `;
-        commentsContainer.insertBefore(commentElement, commentsContainer.firstChild);
-    }
-
-    function formatTimestamp(date) {
-        const now = new Date();
-        const diff = now - date;
-        const minutes = Math.floor(diff / 60000);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-
-        if (days > 0) return `${days}d ago`;
-        if (hours > 0) return `${hours}h ago`;
-        if (minutes > 0) return `${minutes}m ago`;
-        return 'Just now';
-    }
-}
 
 function initializeUserMenu() {
     const userProfile = document.querySelector('.user-profile');
@@ -192,4 +130,5 @@ function initializeUserMenu() {
             userMenu.style.display = 'none';
         }
     });
+
 }

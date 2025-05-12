@@ -33,6 +33,7 @@ public class CommentService
         comment.setBook(book);
         comment.setUser(user);
         comment.setContent(content);
+        comment.setLikes(0);
 
         return commentRepository.save(comment);
     }
