@@ -6,126 +6,108 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeAudioPlayer() {
-    const playPauseButton = document.getElementById('playPause');
-    const rewindButton = document.getElementById('rewind');
-    const forwardButton = document.getElementById('forward');
+    const audioPlayer = document.getElementById("audioPlayer");
+    const playPauseButton = document.getElementById("playPause");
+    const rewindButton = document.getElementById("rewind");
+    const forwardButton = document.getElementById("forward");
     const prevChapterButton = document.getElementById('prevChapter');
     const nextChapterButton = document.getElementById('nextChapter');
     const progressBar = document.querySelector('.progress-bar');
     const progress = document.querySelector('.progress');
-    const currentTime = document.querySelector('.time.current');
-    const totalTime = document.querySelector('.time.total');
-    const speedButton = document.querySelector('.speed-button');
+    const currentTimeElement = document.querySelector('.time.current'); // Fix here
+    const totalTimeElement = document.querySelector('.time.total'); // Fix here
     const volumeSlider = document.querySelector('.volume-slider');
     const volumeIcon = document.querySelector('.volume-control i');
 
     let isPlaying = false;
-    let currentSpeed = 1;
-    const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
-    let currentSpeedIndex = 2;
+
+    // Check if the audioPlayer exists
+    if (!audioPlayer) {
+        console.error("Audio player element not found!");
+        return;
+    }
 
     playPauseButton.addEventListener('click', () => {
-        isPlaying = !isPlaying;
-        playPauseButton.innerHTML = isPlaying ? 
-            '<i class="fas fa-pause"></i>' : 
-            '<i class="fas fa-play"></i>';
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+            playPauseButton.innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+            audioPlayer.pause();
+            playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
+        }
     });
 
     rewindButton.addEventListener('click', () => {
-        updateProgress(Math.max(0, (progress.style.width.replace('%', '') - 5)));
+        audioPlayer.currentTime -= 10; // Rewind 10 seconds
     });
 
     forwardButton.addEventListener('click', () => {
-        updateProgress(Math.min(100, (Number(progress.style.width.replace('%', '')) + 5)));
+        audioPlayer.currentTime += 10; // Forward 10 seconds
     });
 
     progressBar.addEventListener('click', (e) => {
         const rect = progressBar.getBoundingClientRect();
-        const percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width;
-        updateProgress(percent * 100);
-    });
-
-    speedButton.addEventListener('click', () => {
-        currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
-        currentSpeed = speeds[currentSpeedIndex];
-        speedButton.textContent = `${currentSpeed}x`;
+        const percent = (e.clientX - rect.left) / rect.width;
+        audioPlayer.currentTime = percent * audioPlayer.duration;
+        progress.style.width = `${percent * 100}%`;
     });
 
     volumeSlider.addEventListener('input', (e) => {
-        const volume = e.target.value;
+        const volume = e.target.value / 100;
+        audioPlayer.volume = volume;
         updateVolumeIcon(volume);
     });
 
-    function updateProgress(percent) {
-        progress.style.width = `${percent}%`;
-        const totalSeconds = 31500;
-        const currentSeconds = totalSeconds * (percent / 100);
-        currentTime.textContent = formatTime(currentSeconds);
-    }
+    audioPlayer.addEventListener("timeupdate", () => {
+        const currentTime = audioPlayer.currentTime;
+        const duration = audioPlayer.duration;
+
+        // Update current time and total time
+        currentTimeElement.textContent = formatTime(currentTime);
+        totalTimeElement.textContent = formatTime(duration);
+
+        // Update progress bar
+        const progressPercent = (currentTime / duration) * 100;
+        progress.style.width = `${progressPercent}%`;
+    });
 
     function updateVolumeIcon(volume) {
-        const volumeClass = volume > 50 ? 'fa-volume-up' : 
-                           volume > 0 ? 'fa-volume-down' : 
-                           'fa-volume-mute';
+        const volumeClass = volume > 0.5 ? 'fa-volume-up' :
+                            volume > 0 ? 'fa-volume-down' :
+                            'fa-volume-mute';
         volumeIcon.className = `fas ${volumeClass}`;
     }
 
     function formatTime(seconds) {
-        const h = Math.floor(seconds / 3600);
-        const m = Math.floor((seconds % 3600) / 60);
-        const s = Math.floor(seconds % 60);
-        return h > 0 ? 
-            `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}` : 
-            `${m}:${String(s).padStart(2, '0')}`;
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
     }
 }
 
 function initializeTranslations() {
-    const languageButtons = document.querySelectorAll('.language-selector button:not(.add-language)');
-    const addTranslationButton = document.querySelector('.add-translation-button');
-    const voteButtons = document.querySelectorAll('.vote-buttons button');
+    const translationCards = document.querySelectorAll('.translation-card');
+    const bookText = document.getElementById('bookText');
+    const audioPlayer = document.getElementById('audioPlayer');
 
-    languageButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            languageButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
+    translationCards.forEach(card => {
+        card.addEventListener('click', () => {
+            // Get translation data from the clicked card
+            const textContent = card.getAttribute('data-text');
+            const audioUrl = card.getAttribute('data-audio');
+
+            // Update the displayed book text
+            bookText.textContent = textContent;
+
+            // Update the main audio player
+            audioPlayer.src = audioUrl;
+            audioPlayer.load();
+
+            // Highlight the selected card
+            translationCards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
         });
     });
-
-    addTranslationButton.addEventListener('click', () => {
-        showTranslationModal();
-    });
-
-    voteButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const isUpvote = button.classList.contains('vote-up');
-            const siblingButton = isUpvote ? 
-                button.nextElementSibling : 
-                button.previousElementSibling;
-            
-            if (button.classList.contains('active')) {
-                button.classList.remove('active');
-                updateVoteCount(button, -1);
-            } else {
-                if (siblingButton.classList.contains('active')) {
-                    siblingButton.classList.remove('active');
-                    updateVoteCount(siblingButton, -1);
-                }
-                button.classList.add('active');
-                updateVoteCount(button, 1);
-            }
-        });
-    });
-
-    function showTranslationModal() {
-        console.log('Show translation modal');
-    }
-
-    function updateVoteCount(button, change) {
-        const countSpan = button.querySelector('span');
-        const currentCount = parseInt(countSpan.textContent);
-        countSpan.textContent = currentCount + change;
-    }
 }
 
 function initializeComments() {
@@ -210,4 +192,4 @@ function initializeUserMenu() {
             userMenu.style.display = 'none';
         }
     });
-} 
+}

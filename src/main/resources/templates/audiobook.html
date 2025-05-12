@@ -1,164 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Storius - The Great Adventure</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
-    <link rel="stylesheet" href="../static/css/main.css">
-    <link rel="stylesheet" href="../static/css/audiobook.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Inter:wght@400;500&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <title th:text="${book.title} + ' - Audiobook'">Audiobook</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/audiobook.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-left">
-                <a href="main.html" class="nav-logo">
-                    <h1>Storius</h1>
-                </a>
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-left">
+            <a th:href="@{/}" class="nav-logo">
+                <h1>Storius</h1>
+            </a>
+        </div>
+        <div class="nav-right">
+            <div class="user-profile">
+                <img th:src="@{'https://ui-avatars.com/api/?name=' + ${user.username} + '&background=FF6B6B&color=fff'}" alt="User Profile">
+                <span th:text="${user.username}">User</span>
             </div>
-            
-            <div class="nav-center">
-                <div class="search-container">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search for stories, authors, or languages...">
+        </div>
+    </div>
+</nav>
+
+<main class="main-content">
+    <!-- Book Header -->
+    <section class="book-header">
+        <div class="book-info">
+            <img th:src="${book.coverImageUrl}" alt="Book Cover" class="book-cover">
+            <div class="book-details">
+                <h1 th:text="${book.title}">Book Title</h1>
+                <p class="author" th:text="'by ' + ${book.author}">Author Name</p>
+                <div class="book-meta">
+                    <span><i class="fas fa-star"></i> <span th:text="${book.rating}">4.5</span></span>
                 </div>
+                <p class="description" th:text="${book.description}">Book description here</p>
             </div>
-            
-            <div class="nav-right">
-                <button class="nav-button">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </button>
-                <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?name=Selcuk+Oz&background=FF6B6B&color=fff" alt="User Profile">
-                    <span>Selcuk Oz</span>
-                    <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Audio Player -->
+    <section class="audio-player-section">
+        <div class="audio-player">
+            <!-- Audio Element -->
+            <audio id="audioPlayer" th:src="${book.audioUrl}" preload="metadata"></audio>
+
+            <!-- Player Controls -->
+            <div class="player-controls">
+                <button class="control-button" id="prevChapter"><i class="fas fa-step-backward"></i></button>
+                <button class="control-button" id="rewind"><i class="fas fa-backward"></i></button>
+                <button class="control-button play-button" id="playPause"><i class="fas fa-play"></i></button>
+                <button class="control-button" id="forward"><i class="fas fa-forward"></i></button>
+                <button class="control-button" id="nextChapter"><i class="fas fa-step-forward"></i></button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <span class="time current">0:00</span>
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <span class="time total">0:00</span>
+            </div>
+
+            <!-- Volume Control -->
+            <div class="player-settings">
+                <div class="volume-control">
+                    <i class="fas fa-volume-up"></i>
+                    <input type="range" class="volume-slider" min="0" max="100" value="50">
                 </div>
             </div>
         </div>
-    </nav>
+    </section>
 
-    <main class="main-content">
-        <section class="book-header">
-            <div class="book-info">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmwZyttNI6lvOvr4R5S09LN7FF21P1tXaqyQ&s" alt="Fahrenheit 451" class="book-cover">
-                <div class="book-details">
-                    <h1>Fahrenheit 451</h1>
-                    <p class="author">by Ray Bradbury</p>
-                    <div class="book-meta">
-                        <span><i class="fas fa-star"></i> 4.5 (2.3k ratings)</span>
-                        <span><i class="fas fa-language"></i> 12 translations</span>
-                        <span><i class="fas fa-clock"></i> 8h 45m</span>
-                    </div>
-                    <p class="description">
-                        Fahrenheit 451 is a 1953 dystopian novel by American writer Ray Bradbury. It presents a future American society where books have been outlawed and "firemen" burn any that are found. The novel follows in the viewpoint of Guy Montag, a fireman who becomes disillusioned with his role of censoring literature and destroying knowledge, eventually quitting his job and committing himself to the preservation of literary and cultural writings.
-                    </p>
+    <!-- Book Text -->
+    <section class="book-text-section">
+        <h2>Book Text</h2>
+        <div id="bookTextContainer" class="book-text-container">
+            <p id="bookText" th:text="${book.textContent}">Book text will appear here...</p>
+        </div>
+    </section>
+
+    <!-- Translations -->
+    <section class="translation-section">
+        <h2>Translations</h2>
+        <div class="translations">
+            <!-- Main Translation Card -->
+            <div class="translation-card main-translation-card active" 
+                 th:data-text="${book.textContent}" 
+                 th:data-audio="${book.audioUrl}">
+                <h3>Main Translation</h3>
+                <div class="translation-meta">
+                    <span>Original</span>
                 </div>
             </div>
-        </section>
 
-        <section class="audio-player-section">
-            <div class="audio-player">
-                <div class="player-controls">
-                    <button class="control-button" id="prevChapter">
-                        <i class="fas fa-step-backward"></i>
-                    </button>
-                    <button class="control-button" id="rewind">
-                        <i class="fas fa-backward"></i>
-                    </button>
-                    <button class="control-button play-button" id="playPause">
-                        <i class="fas fa-play"></i>
-                    </button>
-                    <button class="control-button" id="forward">
-                        <i class="fas fa-forward"></i>
-                    </button>
-                    <button class="control-button" id="nextChapter">
-                        <i class="fas fa-step-forward"></i>
-                    </button>
-                </div>
-                
-                <div class="progress-container">
-                    <span class="time current">0:00</span>
-                    <div class="progress-bar">
-                        <div class="progress"></div>
-                    </div>
-                    <span class="time total">8:45:00</span>
-                </div>
-
-                <div class="player-settings">
-                    <div class="playback-speed">
-                        <button class="speed-button">1.0x</button>
-                    </div>
-                    <div class="volume-control">
-                        <i class="fas fa-volume-up"></i>
-                        <input type="range" min="0" max="100" value="100" class="volume-slider">
-                    </div>
+            <!-- Other Translations -->
+            <div th:each="translation : ${translations}" 
+                 class="translation-card" 
+                 th:data-text="${translation.textContent}" 
+                 th:data-audio="${translation.translatedAudioUrl}">
+                <h3 th:text="${translation.language} + ' Translation'">Language</h3>
+                <div class="translation-meta">
+                    <span th:text="'Upvotes: ' + ${translation.upvotes}">Upvotes</span>
+                    <span th:text="'Downvotes: ' + ${translation.downvotes}">Downvotes</span>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="translation-section">
-            <div class="language-selector">
-                <button>English</button>
-                <button class="active">Spanish</button>
-                <button>French</button>
-                <button class="add-language">
-                    <i class="fas fa-plus"></i> Add Translation
-                </button>
+    <!-- Comments -->
+    <section class="comments-section">
+        <h2>Community Discussions</h2>
+        <div class="comments-container">
+            <div th:each="comment : ${comments}" class="comment">
+                <p><strong th:text="${comment.user.username}">User</strong>: <span th:text="${comment.content}">Comment</span></p>
+                <p th:text="${comment.likes} + ' likes'">Likes</p>
             </div>
-
-            <div class="translation-content">
-                <div class="original-text">
-                    <h3>Original Text</h3>
-                    <p>Stuff your eyes with wonder, live as if you'd drop dead in ten seconds. See the world. It's more fantastic than any dream made or paid for in factories.</p>
-                </div>
-
-                <div class="translations">
-                    <div class="translation-card">
-                        <div class="translation-header">
-                            <h3>Spanish Translation</h3>
-                            <div class="translation-meta">
-                                <span class="translator">by Maria Garcia</span>
-                                <div class="vote-buttons">
-                                    <button class="vote-up active">
-                                        <i class="fas fa-arrow-up"></i>
-                                        <span>234</span>
-                                    </button>
-                                    <button class="vote-down">
-                                        <i class="fas fa-arrow-down"></i>
-                                        <span>12</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="translation-text">
-                            Llena tus ojos de asombro, vive como si fueras a caer muerto en diez segundos. Mira el mundo. Es más fantástico que cualquier sueño fabricado o comprado en fábricas.
-                        </p>
-                    </div>
-
-                    <div class="add-translation">
-                        <button class="add-translation-button">
-                            <i class="fas fa-plus"></i>
-                            Add Your Translation
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="comments-section">
-            <h2>Community Discussions</h2>
-            <div class="comments-container">
-            </div>
-            <div class="add-comment">
-                <textarea placeholder="Share your thoughts or suggest a translation..."></textarea>
-                <button class="submit-comment">Post Comment</button>
-            </div>
-        </section>
-    </main>
-
-    <script src="js/audiobook.js"></script>
+        </div>
+        <form class="add-comment" th:action="@{/comment}" method="post">
+            <textarea name="content" placeholder="Add a comment..."></textarea>
+            <input type="hidden" th:name="bookId" th:value="${book.id}">
+            <button type="submit" class="submit-comment">Post Comment</button>
+        </form>
+    </section>
+</main>
+<script th:src="@{/js/audiobook.js}"></script>
 </body>
-</html> 
+</html>

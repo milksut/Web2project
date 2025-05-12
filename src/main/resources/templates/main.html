@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Storius - Discover Stories</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
-    <link rel="stylesheet" href="../static/css/main.css">
-    <!-- Google Fonts -->
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Inter:wght@400;500&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -16,7 +14,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-left">
-                <a href="main.html" class="nav-logo">
+                <a href="/" class="nav-logo">
                     <h1>Storius</h1>
                 </a>
             </div>
@@ -24,18 +22,14 @@
             <div class="nav-center">
                 <div class="search-container">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search for stories, authors, or languages...">
+                    <input type="text" placeholder="Search stories...">
                 </div>
             </div>
             
             <div class="nav-right">
-                <button class="nav-button">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </button>
-                <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?name=Selcuk+Oz&background=FF6B6B&color=fff" alt="User Profile">
-                    <span>Selcuk Oz</span>
+                <div class="user-profile" id="profileButton">
+                    <div class="avatar-placeholder" th:text="${#strings.substring(user.username, 0, 1)}"></div>
+                    <span th:text="${user.username}">Username</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
@@ -43,37 +37,71 @@
     </nav>
 
     <main class="main-content">
-        <!-- Hero Section -->
+        <!-- Featured Stories -->
         <section class="hero-section">
-            <div class="featured-carousel">
+            <div class="section-header">
                 <h2>Featured Stories</h2>
-                <div class="carousel-container">
-                    <div class="carousel-items">
-                        <!-- Featured books will be added dynamically -->
+            </div>
+            <div class="carousel-container">
+                <div class="carousel-items">
+                    <div th:each="book : ${featuredBooks}" class="card">
+                        <a th:href="@{/book/{id}(id=${book.id})}">
+                        <img th:src="${book.coverImageUrl}" 
+                             class="book-cover" 
+                             th:alt="${book.title}">
+                        <div class="card-content">
+                            <h3 th:text="${book.title}"></h3>
+                            <p th:text="'by ' + ${book.author}"></p>
+                        </div>
+                        </a>
                     </div>
-                    <button class="carousel-button prev">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="carousel-button next">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
                 </div>
+                <button class="carousel-button prev"><i class="fas fa-chevron-left"></i></button>
+                <button class="carousel-button next"><i class="fas fa-chevron-right"></i></button>
             </div>
         </section>
 
         <!-- Continue Listening -->
         <section class="continue-listening">
-            <h2>Continue Listening</h2>
-            <div class="book-progress-container">
-                <!-- Progress cards will be added dynamically -->
+            <div class="section-header">
+                <h2>Continue Listening</h2>
+            </div>
+            <div class="card-grid horizontal-scroll">
+                <div th:each="book : ${inProgressBooks}" class="card">
+                    <a th:href="@{/book/{id}(id=${book.id})}">
+                    <img th:src="${book.coverImageUrl}" 
+                         class="book-cover" 
+                         th:alt="${book.title}">
+                    <div class="card-content">
+                        <h3 th:text="${book.title}"></h3>
+                        <p th:text="'by ' + ${book.author}"></p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" 
+                                 th:style="'width: ' + ${book.progress} + '%'">
+                            </div>
+                        </div>
+                        <small th:text="${book.progress} + '% completed'"></small>
+                    </div>
+                    </a>
+                </div>
             </div>
         </section>
 
         <!-- Categories -->
         <section class="categories-section">
-            <h2>Browse Categories</h2>
-            <div class="categories-grid">
-                <!-- Categories will be added dynamically -->
+            <div class="section-header">
+                <h2>Browse Categories</h2>
+            </div>
+            <div class="card-grid horizontal-scroll">
+                <div th:each="category : ${categories}" 
+                     class="card category-card" 
+                     data-category="${category.slug}">
+                    <i th:class="'fas fa-' + ${category.icon}" class="fas fa-book"></i>
+                    <div class="card-content">
+                        <h3 th:text="${category.name}"></h3>
+                        <p th:text="${category.count} + ' stories'"></p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -81,25 +109,44 @@
         <section class="trending-section">
             <div class="section-header">
                 <h2>Trending Stories</h2>
-                <button class="view-all-button">View All</button>
             </div>
-            <div class="trending-container">
-                <!-- Trending books will be added dynamically -->
+            <div class="card-grid horizontal-scroll">
+                <div th:each="book : ${trendingBooks}" class="card">
+                    <a th:href="@{/book/{id}(id=${book.id})}">
+                    <img th:src="${book.coverImageUrl}" 
+                         class="book-cover" 
+                         th:alt="${book.title}">
+                    <div class="card-content">
+                        <h3 th:text="${book.title}"></h3>
+                        <p th:text="'by ' + ${book.author}"></p>
+                        <div class="rating">
+                            <span th:text="${book.rating}"></span> ★
+                        </div>
+                    </div>
+                    </a>
+                </div>
             </div>
         </section>
     </main>
 
-    <div class="user-menu" style="display: none;">
-        <ul>
-            <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
-            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-            <li><a href="#"><i class="fas fa-book"></i> My Library</a></li>
-            <li><a href="#"><i class="fas fa-heart"></i> Favorites</a></li>
-            <li class="divider"></li>
-            <li><a href="index.html" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-    </div>
+    <!-- User Menu Dropdown -->
+<div class="user-menu" id="userMenu">
+    <ul>
+        <li><span class="menu-header" th:text="${user.email}"></span></li>
+        <li class="divider"></li>
+        <li><a href="/profile"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="/settings"><i class="fas fa-cog"></i> Settings</a></li>
+        <li class="divider"></li>
+        <li>
+            <form th:action="@{/logout}" method="get">
+                <button type="submit" class="logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>
 
-    <script src="js/main.js"></script>
+    <script th:src="@{/js/main.js}" defer></script>
 </body>
-</html> 
+</html>

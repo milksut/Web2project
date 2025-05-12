@@ -8,6 +8,8 @@
     --white: #FFFFFF;
     --error: #DC3545;
     --success: #28A745;
+    --background-light: #F1F3F5;
+    --text-dark: #212529;
     
     --primary-gradient: linear-gradient(135deg, var(--primary), var(--secondary));
     
@@ -55,11 +57,13 @@ h1, h2, h3, h4, h5, h6 {
 .button-primary {
     background: var(--primary-gradient);
     color: var(--white);
+    border-radius: var(--radius-md);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .button-primary:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-lg);
 }
 
 .button-secondary {
@@ -99,10 +103,20 @@ h1, h2, h3, h4, h5, h6 {
 .mb-4 { margin-bottom: 2rem; }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .fade-in {
     animation: fadeIn 0.3s ease-in;
+}
+
+.hero-section, .continue-listening, .categories-section, .trending-section {
+    animation: fadeIn 0.5s ease-in-out;
 }
