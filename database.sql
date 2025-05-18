@@ -1,8 +1,8 @@
 -- Populate the User table
-INSERT INTO User (id, username, email) VALUES
-(1, 'Selcuk Oz', 'selcuk@example.com'),
-(2, 'Maria Garcia', 'maria@example.com'),
-(3, 'John Doe', 'john@example.com');
+INSERT INTO User (id, username, password, email) VALUES
+(1, 'Selcuk Oz','30dbe0e3db5938e47b4735c02722b4606dcc6e86ff2295527fe742dfa988579a' ,'selcuk@example.com'),
+(2, 'Maria Garcia','626e3c805e77eeb472c42c6be607be2af7ac5c08fd7050f278e0330fe81abf57' ,'maria@example.com'),
+(3, 'John Doe','b4b597c714a8f49103da4dab0266af0ee0ae4f8575250a84855c3d76941cd422' ,'john@example.com');
 
 -- Populate the Book table
 INSERT INTO Book (id, title, cover_image_url, author, language, audio_url, rating, text_content, description, progress)

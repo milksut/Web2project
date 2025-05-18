@@ -116,19 +116,56 @@ function initializeTranslations() {
     });
 }
 
-
-function initializeUserMenu() {
-    const userProfile = document.querySelector('.user-profile');
-    const userMenu = document.querySelector('.user-menu');
-
-    userProfile.addEventListener('click', () => {
-        userMenu.style.display = userMenu.style.display === 'none' ? 'block' : 'none';
+function initializeComments() {
+    // Comment voting
+    document.querySelectorAll('.comment-vote').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const commentId = this.getAttribute('data-id');
+            const isUpvote = this.classList.contains('upvote-btn');
+            vote('comment', commentId, isUpvote, this);
+        });
     });
 
-    document.addEventListener('click', (e) => {
-        if (!userProfile.contains(e.target) && !userMenu.contains(e.target)) {
-            userMenu.style.display = 'none';
-        }
+    // Translation voting
+    document.querySelectorAll('.translation-vote').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const translationId = this.getAttribute('data-id');
+            const isUpvote = this.classList.contains('upvote-btn');
+            vote('translation', translationId, isUpvote, this);
+        });
     });
 
+    function vote(type, id, isUpvote, btn) {
+        fetch(`/api/${type}/${isUpvote ? 'upvote' : 'downvote'}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: id })
+        })
+        .then(res => res.json())
+        .then(data =>
+        {
+            if (type === 'translation')
+            {
+                document.getElementById(`translation-upvotes-${id}`).textContent = data.upvotes + ' upvotes';
+                document.getElementById(`translation-downvotes-${id}`).textContent = data.downvotes + ' downvotes';
+                // Highlight the voted button
+                document.querySelectorAll(`.translation-vote[data-id="${id}"]`).forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            else if (type === 'comment')
+            {
+                document.getElementById(`comment-likes-${id}`).textContent = data.likes + ' likes';
+                document.querySelectorAll(`.comment-vote[data-id="${id}"]`).forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            if (!data.success && data.message) {
+                alert(data.message);
+            }
+        })
+        .catch(() => {
+            alert('Vote failed');
+        });
+    }
 }

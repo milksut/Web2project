@@ -92,21 +92,33 @@
             <div class="translation-card main-translation-card active" 
                  th:data-text="${book.textContent}" 
                  th:data-audio="${book.audioUrl}">
-                <h3>Main Translation</h3>
+                <h3>Main Text</h3>
                 <div class="translation-meta">
                     <span>Original</span>
                 </div>
             </div>
 
             <!-- Other Translations -->
-            <div th:each="translation : ${translations}" 
-                 class="translation-card" 
+            <div th:each="translation : ${translations}" class="translation-card" 
                  th:data-text="${translation.textContent}" 
                  th:data-audio="${translation.translatedAudioUrl}">
                 <h3 th:text="${translation.language} + ' Translation'">Language</h3>
                 <div class="translation-meta">
-                    <span th:text="'Upvotes: ' + ${translation.upvotes}">Upvotes</span>
-                    <span th:text="'Downvotes: ' + ${translation.downvotes}">Downvotes</span>
+                    <span th:text="'by ' +${translation.translatorName}"></span>
+                </div>
+                <div class="vote-buttons">
+                    <button type="button" class="upvote-btn translation-vote"
+                            th:data-id="${translation.id}" data-type="translation" title="Upvote"
+                            th:classappend="${translation.vote == 1} ? ' active' : ''">
+                        <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button type="button" class="downvote-btn translation-vote"
+                            th:data-id="${translation.id}" data-type="translation" title="Downvote"
+                            th:classappend="${translation.vote == -1} ? ' active' : ''">
+                        <i class="fas fa-thumbs-down"></i>
+                    </button>
+                    <span class="translation-upvotes" th:id="'translation-upvotes-' +${translation.id}" th:text="${translation.upvotes} + ' upvotes'">0 upvotes</span>
+                    <span class="translation-downvotes" th:id="'translation-downvotes-' +${translation.id}" th:text="${translation.downvotes} + ' downvotes'">0 downvotes</span>
                 </div>
             </div>
         </div>
@@ -116,9 +128,21 @@
     <section class="comments-section">
         <h2>Community Discussions</h2>
         <div class="comments-container">
-            <div th:each="comment : ${comments}" class="comment">
+            <div th:each="comment : ${comments_votes}" class="comment">
                 <p><strong th:text="${comment.user.username}">User</strong>: <span th:text="${comment.content}">Comment</span></p>
-                <p th:text="${comment.likes} + ' likes'">Likes</p>
+                <p th:id="'comment-likes-' + ${comment.id}" th:text="${comment.likes} + ' likes'">Likes</p>
+                <div class="vote-buttons">
+                    <button type="button" class="upvote-btn comment-vote"
+                            th:data-id="${comment.id}" data-type="comment" title="Upvote"
+                            th:classappend="${comment.vote == 1} ? ' active' : ''">
+                        <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button type="button" class="downvote-btn comment-vote"
+                            th:data-id="${comment.id}" data-type="comment" title="Downvote"
+                            th:classappend="${comment.vote == -1} ? ' active' : ''">
+                        <i class="fas fa-thumbs-down"></i>
+                    </button>
+                </div>
             </div>
         </div>
         <form class="add-comment" th:action="@{/comment}" method="post" onsubmit="syncTextarea()">
@@ -126,6 +150,31 @@
             <input type="hidden" th:name="contentHidden" id="contentHidden">
             <input type="hidden" th:name="bookId" th:value="${book.id}">
             <button type="submit" class="submit-comment">Post Comment</button>
+        </form>
+    </section>
+
+    <!-- Upload Translation -->
+    <section class="upload-translation-section">
+        <h3>Upload a Translation</h3>
+        <form th:action="@{/translation/upload}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="bookId" th:value="${book.id}" />
+            <div class="form-group">
+                <label for="language">Language</label>
+                <input type="text" id="language" name="language" required placeholder="e.g. Spanish">
+            </div>
+            <div class="form-group">
+                <label for="translatorName">Your Name</label>
+                <input type="text" id="translatorName" name="translatorName" required>
+            </div>
+            <div class="form-group">
+                <label for="textContent">Translation Text</label>
+                <textarea id="textContent" name="textContent" required placeholder="Enter translation text"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="audioFile">Audio File (optional)</label>
+                <input type="file" id="audioFile" name="audioFile" accept="audio/*">
+            </div>
+            <button type="submit" class="login-button">Submit Translation</button>
         </form>
     </section>
 </main>
