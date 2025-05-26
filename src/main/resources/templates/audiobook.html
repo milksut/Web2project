@@ -19,8 +19,8 @@
         </div>
         <div class="nav-right">
             <div class="user-profile">
-                <img th:src="@{'https://ui-avatars.com/api/?name=' + ${user.username} + '&background=FF6B6B&color=fff'}" alt="User Profile">
-                <span th:text="${user.username}">User</span>
+                <img th:src="@{'https://ui-avatars.com/api/?name=' + ${user.DisplayName} + '&background=FF6B6B&color=fff'}" alt="User Profile">
+                <span th:text="${user.DisplayName}">User</span>
             </div>
         </div>
     </div>
@@ -129,7 +129,7 @@
         <h2>Community Discussions</h2>
         <div class="comments-container">
             <div th:each="comment : ${comments_votes}" class="comment">
-                <p><strong th:text="${comment.user.username}">User</strong>: <span th:text="${comment.content}">Comment</span></p>
+                <p><strong th:text="${comment.user.DisplayName}">User</strong>: <span th:text="${comment.content}">Comment</span></p>
                 <p th:id="'comment-likes-' + ${comment.id}" th:text="${comment.likes} + ' likes'">Likes</p>
                 <div class="vote-buttons">
                     <button type="button" class="upvote-btn comment-vote"
