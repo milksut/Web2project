@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @ControllerAdvice
 public class controlleradvice
@@ -24,7 +24,7 @@ public class controlleradvice
     private final List<String> excludedPaths = List.of("/login", "/register");
 
     @ModelAttribute
-    public void look_for_user_id(Model model, HttpServletRequest request)
+    public void look_for_user_id(Model model, HttpServletRequest request, HttpSession session)
     {
         String path = request.getRequestURI();
 
@@ -37,6 +37,7 @@ public class controlleradvice
         if (authentication != null && authentication.isAuthenticated()) {
            User user = userService.findByEmail(authentication.getName()).get();
            model.addAttribute("user", user);
+           session.setAttribute("user_id",user.getId());
         }
 
     }
